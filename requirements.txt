@@ -1,0 +1,9 @@
+pymupdf4llm>=0.0.22
+pdf2image>=1.16.0
+boto3>=1.28.0
+numpy>=1.22.0
+Pillow>=9.0.0
+PyMuPDF>=1.20.0
+argparse>=1.4.0
+langchain>=0.1.0
+langchain-aws>=0.1.0
