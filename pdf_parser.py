@@ -54,7 +54,7 @@ def is_drawing_page(page, text_threshold=200, line_ratio_threshold=0.4):
     return False
 
 def identify_drawing_pages_with_ai(pdf_path):
-    """Langchain과 AI를 사용하여 PDF 파일에서 도면 페이지 식별
+    """Gen AI를 사용하여 PDF 파일에서 도면 페이지 식별
     
     Args:
         pdf_path: PDF 파일 경로
@@ -126,7 +126,7 @@ def parse_pdf_with_ai(pdf_path):
     Returns:
         tuple: (마크다운 파일 경로, 도면 페이지 목록)
     """
-    print("Langchain을 사용한 AI 기반 도면 식별 방식 사용 중...")
+    print("Gen AI 기반 도면 식별 방식 사용 중...")
     
     # AI를 사용한 도면 식별
     drawing_pages = identify_drawing_pages_with_ai(pdf_path)
