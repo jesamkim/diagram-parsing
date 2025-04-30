@@ -1,43 +1,75 @@
 # PDF 도면 파싱 도구
 
-PDF 파일에서 텍스트, 테이블, 이미지 및 도면을 추출하고 분석하여 마크다운 문서로 변환하는 도구입니다. 이 도구는 특히 도면이 포함된 PDF를 처리하는 데 최적화되어 있으며, Amazon Bedrock의 생성형 AI 모델을 활용하여 도면 내용을 자세히 분석합니다.
+PDF 파일에서 텍스트, 테이블, 이미지 및 도면을 추출하고 분석하여 마크다운 문서로 변환하는 도구입니다. 이 도구는 특히 도면이 포함된 PDF를 처리하는 데 최적화되어 있으며, Amazon Bedrock의 생성형 AI 모델의 멀티모달 기능을 활용하여 도면 내용을 자세히 분석합니다.
 
 ## 주요 기능
 
 - PDF에서 일반 텍스트, 테이블, 이미지 추출 (pymupdf4llm 사용)
-- Amazon Bedrock Nova Lite 모델을 사용한 도면 페이지 자동 식별 (Langchain 통합)
+- Amazon Bedrock Nova Lite 모델을 사용한 도면 페이지 자동 식별
 - 도면 페이지를 고품질 PNG로 변환 (pdf2image 사용)
 - 회전된 도면 감지 및 보정
-- Amazon Bedrock Nova Pro 모델을 사용한 도면 분석 (Langchain 통합):
+- Amazon Bedrock Nova Pro 모델을 사용한 도면 분석 :
   - 도면 유형 식별 (건축, 기계, 전기 등)
   - 수치 및 치수 추출
   - 테이블 형식 데이터 구조화
 - Claude 3.7 Sonnet을 사용한 마크다운 문서 최적화
 - 원본 PDF와 동일한 이름의 최종 마크다운 파일 생성
 
+## Amazon Bedrock Nova Lite
+
+이 프로젝트에서는 Amazon Bedrock의 Nova Lite 모델을 사용하여 PDF 파일에서 도면 페이지를 자동으로 식별합니다. Nova Lite는 매우 비용 효율적이면서도 빠른 속도로 이미지, 비디오, 텍스트 입력을 처리할 수 있는 멀티모달 모델입니다.
+
+### Nova Lite를 사용한 도면 식별 프로세스
+
+1. PDF의 모든 페이지를 저해상도 JPEG 이미지로 변환
+2. 각 이미지를 Nova Lite 모델에 입력하여 분석
+3. 모델이 직선, 도형, 치수, 기술적 표기가 많고 텍스트가 적은 페이지를 도면으로 식별
+4. 도면으로 식별된 페이지만 고해상도 PNG로 변환하여 심층 분석 수행
+
+Nova Lite 모델은 매우 빠른 추론 속도와 낮은 비용으로 대량의 PDF 페이지를 효율적으로 처리할 수 있어 도면 페이지 식별에 이상적입니다.
+
 ## 워크플로우
 
-1. PDF 파싱 및 도면 페이지 식별
+1. PDF 파싱 및 도면 페이지 식별 (Nova Lite 사용)
 2. 도면 페이지 PNG 변환
-3. 도면 이미지 분석
-4. 마크다운 문서 생성 및 최적화
+3. 도면 이미지 분석 (Nova Pro 사용)
+4. 마크다운 문서 생성 및 최적화 (Claude 3.7 Sonnet 사용)
+
+## Amazon Bedrock 모델 비교
+
+이 프로젝트는 다음과 같은 Amazon Bedrock의 AI 모델들을 활용합니다:
+
+| 특성 | Nova Lite | Nova Pro | Claude 3.7 Sonnet |
+|---|---|---|---|
+| **주요 기능** | 고속 멀티모달 이해 | 고성능 멀티모달 분석 | 고급 텍스트 추론 및 생성 |
+| **프로젝트 내 역할** | 도면 페이지 자동 식별 | 도면 내용 상세 분석 | 최종 마크다운 최적화 |
+| **입력 모달리티** | 텍스트, 이미지, 비디오 | 텍스트, 이미지, 비디오 | 텍스트, 이미지 |
+| **출력 모달리티** | 텍스트 | 텍스트 | 텍스트 |
+| **최대 출력 토큰** | 5K | 5K | 8K |
+| **특징** | 매우 빠른 처리 속도, 저비용 | 높은 정확도, 심층 분석 능력 | 확장된 사고(extended thinking) 능력, 내용 구조화 |
+| **유스케이스** | 대량 이미지 분류, 빠른 시각 정보 처리 | 복잡한 도면 분석, 세부 정보 추출 | 마크다운 최적화, 텍스트 구조화 |
+| **상대적 비용** | $ | $$ | $$ |
+| **상대적 정확도** | ★★☆ | ★★★ | ★★★ |
+| **상대적 속도** | ★★★ | ★★☆ | ★★☆ |
+
+이 모델들의 조합을 통해 PDF 도면 파싱의 각 단계를 최적화하여 높은 성능과 비용 효율성을 달성합니다.
 
 ## 시스템 구성도
 
 ```mermaid
 graph TD
     A[PDF 입력 파일] --> B[모든 페이지 JPEG로 변환]
-    B --> C[Langchain으로 Nova Lite 호출하여 도면 페이지 식별]
+    B --> C[Nova Lite로 도면 페이지 식별]
     C --> D{도면 페이지?}
     D -- Yes --> E[고해상도 PNG로 변환]
     E --> F[도면 회전 감지 및 보정]
-    F --> G[Langchain으로 Nova Pro 호출하여 도면 분석]
+    F --> G[Nova Pro로 도면 내용 분석]
     G --> H[도면 수치/정보 추출]
     D -- No --> I[일반 텍스트/테이블 추출]
     H --> J[마크다운 생성기]
     I --> J
     J --> K[도면 이미지 상대 경로 처리 및 마크다운에 통합]
-    K --> L[Claude로 최종 MD 최적화]
+    K --> L[Claude 3.7 Sonnet 으로 최종 MD 최적화]
     L --> M[최종 MD 파일]
 ```
 
@@ -48,7 +80,7 @@ graph TD
 ├── pdf_parser.py         # PDF 파싱 및 도면 페이지 식별
 ├── drawing_extractor.py  # 도면 페이지 PNG 변환
 ├── drawing_analyzer.py   # 도면 분석 (Nova Pro 사용)
-├── md_generator.py       # 마크다운 생성 (Claude 3.7 사용)
+├── md_generator.py       # 마크다운 생성 (Claude 3.7 Sonnet 사용)
 ├── aws_client.py         # AWS Bedrock 클라이언트
 ├── utils.py              # 유틸리티 함수
 ├── config.py             # 환경 설정
@@ -135,7 +167,7 @@ python main.py <PDF_파일_경로> --skip-claude
 ### 예시
 
 ```bash
-python main.py samples/building_blueprint.pdf
+python main.py sample_building_blueprint.pdf
 ```
 
 ## 결과물
@@ -150,7 +182,7 @@ python main.py samples/building_blueprint.pdf
 - **AWS API 호출 비용**: Amazon Bedrock API 사용에는 비용이 발생할 수 있습니다.
 - **도면 이미지 경로**: 최종 마크다운 파일에서 도면 이미지는 상대 경로로 참조되며, output/ 디렉토리에 복사됩니다.
 - **처리 시간**: 도면 크기, 복잡도, 페이지 수에 따라 처리 시간이 달라집니다.
-- **도면 식별**: AI 기반 도면 식별은 Langchain을 통해 개선되었지만 일부 도면을 인식하지 못할 수 있습니다.
+- **도면 식별**: AI 기반 도면 식별은 일부 도면을 인식하지 못할 수 있습니다.
 
 ## 문제 해결
 
@@ -171,7 +203,8 @@ python main.py samples/building_blueprint.pdf
 4. **도면 인식 실패**
    - AWS Bedrock Nova Lite 및 Nova Pro 모델에 접근 권한 확인
 
-## 참고 자료
+
+## References
 
 - [Amazon Bedrock 문서](https://docs.aws.amazon.com/bedrock/)
 - [PDF2Image 문서](https://github.com/Belval/pdf2image)
