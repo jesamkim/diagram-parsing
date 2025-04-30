@@ -107,8 +107,8 @@ graph TD
 ### 1. 저장소 클론
 
 ```bash
-git clone <저장소_URL>
-cd <저장소_디렉토리>
+git clone https://github.com/jesamkim/diagram-parsing.git
+cd diagram-parsing
 ```
 
 ### 2. 가상환경 생성 및 활성화 (권장)
