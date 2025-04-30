@@ -3,7 +3,10 @@ import shutil
 import re
 import pymupdf4llm
 import fitz  # PyMuPDF
+import warnings
 from PIL import Image
+# DecompressionBombWarning 경고 무시
+warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
 import io
 import numpy as np
 from utils import create_dirs, get_pdf_name, ensure_unique_filename
