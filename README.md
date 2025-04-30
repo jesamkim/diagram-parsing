@@ -170,6 +170,35 @@ python main.py <PDF_파일_경로> --skip-claude
 python main.py sample_building_blueprint.pdf
 ```
 
+## 처리 단계별 출력 결과
+
+PDF 도면 파싱 도구의 주요 처리 단계별 출력 결과는 다음과 같습니다:
+
+### Step 1: PDF 파싱 및 도면 페이지 식별 (Nova Lite)
+
+첫 번째 단계에서는 Nova Lite 모델을 사용하여 PDF의 모든 페이지를 분석하고 도면 페이지를 식별합니다.
+
+![Step 1: PDF 파싱 및 도면 페이지 식별](img/output-step1.png)
+
+### Step 2: 도면 페이지 PNG 변환
+
+식별된 도면 페이지만 고품질 PNG로 변환하고 필요한 경우 회전을 보정합니다.
+
+![Step 2: 도면 페이지 PNG 변환](img/output-step2.png)
+
+### Step 3: 도면 이미지 분석 (Nova Pro)
+
+Nova Pro 모델은 변환된 도면 이미지를 분석하여 상세 정보를 추출합니다.
+
+![Step 3: 도면 이미지 분석](img/output-step3.png)
+
+### Step 4: 마크다운 생성 및 최적화 (Claude 3.7 Sonnet)
+
+마지막으로 Claude 3.7 Sonnet 모델을 사용하여 최종 마크다운 문서를 생성하고 최적화합니다.
+
+![Step 4: 마크다운 생성 및 최적화](img/output-step4.png) <br>
+![Step 4: 마크다운 생성 및 최적화2](img/output-step5.png)
+
 ## 결과물
 
 - `temp/` 디렉토리: 추출된 이미지 및 변환된 도면 파일
