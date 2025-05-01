@@ -8,7 +8,7 @@ PDF 파일에서 텍스트, 테이블, 이미지 및 도면을 추출하고 분�
 - Amazon Bedrock Nova Lite 모델을 사용한 도면 페이지 자동 식별
 - 도면 페이지를 고품질 PNG로 변환 (pdf2image 사용)
 - 회전된 도면 감지 및 보정
-- Amazon Bedrock Nova Pro 모델을 사용한 도면 분석 :
+- Amazon Bedrock Nova Premier 모델을 사용한 도면 분석 :
   - 도면 유형 식별 (건축, 기계, 전기 등)
   - 수치 및 치수 추출
   - 테이블 형식 데이터 구조화
@@ -32,14 +32,14 @@ Nova Lite 모델은 매우 빠른 추론 속도와 낮은 비용으로 대량의
 
 1. PDF 파싱 및 도면 페이지 식별 (Nova Lite 사용)
 2. 도면 페이지 PNG 변환
-3. 도면 이미지 분석 (Nova Pro 사용)
+3. 도면 이미지 분석 (Nova Premier 사용)
 4. 마크다운 문서 생성 및 최적화 (Claude 3.7 Sonnet 사용)
 
 ## Amazon Bedrock 모델 비교
 
 이 프로젝트는 다음과 같은 Amazon Bedrock의 AI 모델들을 활용합니다:
 
-| 특성 | Nova Lite | Nova Pro | Claude 3.7 Sonnet |
+| 특성 | Nova Lite | Nova Premier | Claude 3.7 Sonnet |
 |---|---|---|---|
 | **주요 기능** | 고속 멀티모달 이해 | 고성능 멀티모달 분석 | 고급 텍스트 추론 및 생성 |
 | **프로젝트 내 역할** | 도면 페이지 자동 식별 | 도면 내용 상세 분석 | 최종 마크다운 최적화 |
@@ -63,7 +63,7 @@ graph TD
     C --> D{도면 페이지?}
     D -- Yes --> E[고해상도 PNG로 변환]
     E --> F[도면 회전 감지 및 보정]
-    F --> G[Nova Pro로 도면 내용 분석]
+    F --> G[Nova Premier로 도면 내용 분석]
     G --> H[도면 수치/정보 추출]
     D -- No --> I[일반 텍스트/테이블 추출]
     H --> J[마크다운 생성기]
@@ -79,14 +79,30 @@ graph TD
 ├── main.py               # 메인 워크플로우 및 CLI 인터페이스
 ├── pdf_parser.py         # PDF 파싱 및 도면 페이지 식별
 ├── drawing_extractor.py  # 도면 페이지 PNG 변환
-├── drawing_analyzer.py   # 도면 분석 (Nova Pro 사용)
+├── drawing_analyzer.py   # 도면 분석 (Nova Premier 사용)
 ├── md_generator.py       # 마크다운 생성 (Claude 3.7 Sonnet 사용)
 ├── aws_client.py         # AWS Bedrock 클라이언트
+├── prompts.py            # AI 모델 프롬프트 중앙 관리
 ├── utils.py              # 유틸리티 함수
 ├── config.py             # 환경 설정
 ├── requirements.txt      # 필요 라이브러리
 └── README.md             # 프로젝트 설명서
 ```
+
+### 핵심 파일 설명
+
+#### prompts.py
+
+이 파일은 모든 AI 모델 프롬프트를 중앙에서 관리합니다. 주요 내용:
+
+- `DRAWING_ANALYSIS_PROMPT`: Nova Premier 모델이 도면을 분석하기 위한 상세 지침
+- `DRAWING_IDENTIFICATION_PROMPT`: Nova Lite 모델이 이미지가 도면인지 식별하기 위한 지침
+- `get_markdown_processing_prompt()`: Claude 모델의 마크다운 처리를 위한 동적 프롬프트 생성 함수
+
+프롬프트를 중앙화하여 관리함으로써:
+- 프롬프트 내용의 일관성 유지
+- 중복 코드 제거로 유지보수성 향상
+- 프롬프트 개선 시 한 곳만 수정하면 됨
 
 ## 필요 조건
 
@@ -186,9 +202,9 @@ PDF 도면 파싱 도구의 주요 처리 단계별 출력 결과는 다음과 �
 
 ![Step 2: 도면 페이지 PNG 변환](img/output-step2.png)
 
-### Step 3: 도면 이미지 분석 (Nova Pro)
+### Step 3: 도면 이미지 분석 (Nova Premier)
 
-Nova Pro 모델은 변환된 도면 이미지를 분석하여 상세 정보를 추출합니다.
+Nova Premier 모델은 변환된 도면 이미지를 분석하여 상세 정보를 추출합니다.
 
 ![Step 3: 도면 이미지 분석](img/output-step3.png)
 
@@ -230,7 +246,7 @@ Nova Pro 모델은 변환된 도면 이미지를 분석하여 상세 정보를 �
    - PATH 환경 변수 설정 확인
 
 4. **도면 인식 실패**
-   - AWS Bedrock Nova Lite 및 Nova Pro 모델에 접근 권한 확인
+   - AWS Bedrock Nova Lite 및 Nova Premier 모델에 접근 권한 확인
 
 
 ## References

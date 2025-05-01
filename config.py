@@ -1,6 +1,7 @@
 # AWS Bedrock 설정
 BEDROCK_REGION = 'us-west-2'
-BEDROCK_NOVA_PRO_MODEL_ID = 'us.amazon.nova-pro-v1:0'
+# BEDROCK_NOVA_PRO_MODEL_ID = 'us.amazon.nova-pro-v1:0'  # 기존 Nova Pro 모델
+BEDROCK_NOVA_PRO_MODEL_ID = 'us.amazon.nova-premier-v1:0'  # 새로운 Nova Premier 모델
 BEDROCK_NOVA_LITE_MODEL_ID = 'us.amazon.nova-lite-v1:0'
 BEDROCK_CLAUDE_MODEL_ID = 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'
 
@@ -21,4 +22,4 @@ LOW_RES_IMAGE_QUALITY = 72  # 초기 스캔용 저해상도 DPI
 IMAGE_FORMAT = 'PNG'
 
 # 도면 분석 설정
-MAX_TOKENS_DRAWING_ANALYSIS = 4000
+MAX_TOKENS_DRAWING_ANALYSIS = 5000

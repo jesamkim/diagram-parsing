@@ -146,32 +146,17 @@ def parse_pdf_with_ai(pdf_path):
     print(f"일반 페이지: {regular_pages}")
     print(f"도면 페이지: {drawing_pages}")
     
-    # 모든 페이지 pymupdf4llm으로 변환
+    # 모든 페이지 pymupdf4llm으로 변환하여 직접 저장 (참조 코드 방식 적용)
     print("모든 페이지 내용 추출 중...")
     full_md_text = pymupdf4llm.to_markdown(pdf_path, write_images=True)
     
-    # 페이지 구분자로 분리
-    page_separator = re.compile(r'<!--\s*page\s+\d+\s*-->')
-    md_pages = page_separator.split(full_md_text)
+    # 직접 마크다운 텍스트 사용하되, 이미지 경로를 temp/ 디렉토리로 조정
+    md_text = full_md_text
+    # 이미지 경로 수정 (예: ![이미지](파일명.png) -> ![이미지](temp/파일명.png))
+    md_text = re.sub(r'!\[(.*?)\]\(([^/]*\.png)\)', r'![\1](temp/\2)', md_text)
     
-    # 페이지 번호 헤더 제거
-    md_pages = [re.sub(r'^#+\s*Page\s+\d+\s*$', '', p, flags=re.MULTILINE).strip() for p in md_pages]
-    
-    # PDF의 총 페이지 수 확인
-    pdf_document = fitz.open(pdf_path)
-    total_pages = len(pdf_document)
-    pdf_document.close()
-    
-    # 전체 마크다운 조합 (모든 페이지 포함)
-    md_text = ""
-    if len(md_pages) > 1:  # 첫 번째 요소는 종종 빈 문자열임
-        for i in range(total_pages):
-            if i < len(md_pages) - 1:  # 안전 검사
-                page_content = md_pages[i + 1]  # +1은 첫 번째 빈 요소를 고려
-                md_text += f"<!-- page {i} -->\n\n{page_content}\n\n"
-    
-    # 초기 마크다운 파일 생성
-    output_path = output_dir / f"{pdf_name}.md"
+    # 초기 마크다운 파일 생성 (프로젝트 홈 디렉토리에)
+    output_path = pathlib.Path(f"{pdf_name}.md")
     output_path.write_text(md_text, encoding="utf-8")
     
     # 이미지 파일들을 temp 디렉토리로 이동

@@ -52,7 +52,7 @@ def insert_drawing_analysis(md_content, drawing_results):
             print(f"도면 이미지 복사 중 오류: {str(e)}")
         
         drawing_info[drawing_path.name] = {
-            'path': f"./{drawing_path.name}",  # 상대 경로로 변경
+            'path': f"output/{drawing_path.name}",  # output/ 디렉토리 명시
             'page_num': page_num,
             'analysis': analysis
         }
@@ -111,10 +111,10 @@ def generate_markdown(md_path, drawing_results, output_path=None):
         # 디렉토리 생성
         _, output_dir = create_dirs()
         
-        # 기본 경로 설정 - 항상 원본 이름 사용 (중복 파일명 생성 방지)
+        # 기본 경로 설정 - 항상 원본 이름 사용, 프로젝트 루트 디렉토리에 저장
         if output_path is None:
             pdf_name = get_pdf_name(md_path)
-            output_path = output_dir / f"{pdf_name}.md"
+            output_path = pathlib.Path(f"{pdf_name}.md")  # 루트 디렉토리에 저장
             # 파일이 이미 존재하더라도 덮어쓰기 (unique 파일명 생성 하지 않음)
         
         # 원본 마크다운 내용 읽기
@@ -123,9 +123,10 @@ def generate_markdown(md_path, drawing_results, output_path=None):
         # 도면 분석 결과 삽입
         enhanced_content = insert_drawing_analysis(md_content, drawing_results)
         
-        # Claude로 최종 마크다운 최적화
+        # 도면 유무에 관계없이 항상 Claude로 최종 마크다운 최적화
         bedrock_client = BedrockClient()
         pdf_name = get_pdf_name(md_path)
+        print(f"Claude 3.7 Sonnet으로 마크다운 최적화 중...")
         final_content = bedrock_client.generate_markdown_with_claude(enhanced_content, pdf_name)
         
         if final_content:
