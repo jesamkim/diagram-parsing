@@ -72,12 +72,14 @@ class BedrockClient:
             if context:
                 prompt += f"\n\n관련 컨텍스트 정보:\n{context}"
             
-            # Nova Pro 모델 초기화
+            # Nova Premier 모델 초기화
             chat = ChatBedrock(
                 model_id=BEDROCK_NOVA_PRO_MODEL_ID,
                 region_name=BEDROCK_REGION,
                 model_kwargs={
-                    "temperature": 0.2,
+                    "temperature": 0.0,
+                    "top_p": 0.0,
+                    "top_k": 0,
                     "maxTokens": MAX_TOKENS_DRAWING_ANALYSIS
                 }
             )
@@ -231,6 +233,8 @@ class BedrockClient:
                 region_name=BEDROCK_REGION,
                 model_kwargs={
                     "temperature": 0.0,
+                    "top_p": 0.0,
+                    "top_k": 0,
                     "maxTokens": 10
                 }
             )
@@ -321,7 +325,9 @@ class BedrockClient:
                 ],
                 "inferenceConfig": {
                     "maxTokens": 10,
-                    "temperature": 0.0
+                    "temperature": 0.0,
+                    "topP": 0.0,
+                    "topK": 0
                 }
             }
             
@@ -380,6 +386,9 @@ class BedrockClient:
             body = {
                 "anthropic_version": "bedrock-2023-05-31",
                 "max_tokens": 4000,
+                "temperature": 0.0,
+                "top_p": 0.0,
+                "top_k": 0,
                 "messages": [
                     {
                         "role": "user",
