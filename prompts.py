@@ -73,6 +73,7 @@ def get_markdown_processing_prompt(pdf_name, chunk):
 
 원본 마크다운 내용:
 ```
+
 {chunk}
 ```
 
