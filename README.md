@@ -12,6 +12,7 @@ PDF 파일에서 텍스트, 테이블, 이미지 및 도면을 추출하고 분�
   - 도면 유형 식별 (건축, 기계, 전기 등)
   - 수치 및 치수 추출
   - 테이블 형식 데이터 구조화
+  - JSON format
 - Claude 3.7 Sonnet을 사용한 마크다운 문서 최적화
 - 원본 PDF와 동일한 이름의 최종 마크다운 파일 생성
 
@@ -32,7 +33,7 @@ Nova Lite 모델은 매우 빠른 추론 속도와 낮은 비용으로 대량의
 
 1. PDF 파싱 및 도면 페이지 식별 (Nova Lite 사용)
 2. 도면 페이지 PNG 변환
-3. 도면 이미지 분석 (Nova Premier 사용)
+3. 도면 이미지 분석 : JSON 포멧으로 내용 추출 (Nova Premier 사용)
 4. 마크다운 문서 생성 및 최적화 (Claude 3.7 Sonnet 사용)
 
 ## Amazon Bedrock 모델 비교
@@ -69,8 +70,8 @@ graph TD
     H --> J[마크다운 생성기]
     I --> J
     J --> K[도면 이미지 상대 경로 처리 및 마크다운에 통합]
-    K --> L[Claude 3.7 Sonnet 으로 최종 MD 최적화]
-    L --> M[최종 MD 파일]
+    K --> L[Claude 3.7 Sonnet 으로 MD 재구성]
+    L --> M[최종 MD, JSON 파일]
 ```
 
 ## 프로젝트 구조
