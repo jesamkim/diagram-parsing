@@ -111,7 +111,7 @@ graph TD
 - AWS 계정 및 자격 증명 (Amazon Bedrock 접근 권한 필요)
 - 다음 라이브러리 및 의존성:
   - pymupdf4llm
-  - pdf2image (poppler 의존성 필요)
+  - pdf2image (poppler 의존성 필요 - 필수)
   - boto3
   - langchain>=0.1.0
   - langchain-aws>=0.1.0
@@ -139,10 +139,10 @@ venv\Scripts\activate     # Windows
 ### 3. 의존성 설치
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt -U
 ```
 
-### 4. Poppler 설치 (pdf2image 의존성)
+### 4. Poppler 설치 (pdf2image 의존성 - 필수)
 
 - **macOS**: `brew install poppler`
 - **Ubuntu/Debian**: `sudo apt-get install poppler-utils`
