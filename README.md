@@ -55,7 +55,7 @@ Nova Lite 모델은 매우 빠른 추론 속도와 낮은 비용으로 대량의
 
 이 모델들의 조합을 통해 PDF 도면 파싱의 각 단계를 최적화하여 높은 성능과 비용 효율성을 달성합니다.
 
-## 시스템 구성도
+## Workflow
 
 ```mermaid
 graph TD
@@ -85,7 +85,7 @@ graph TD
 ├── aws_client.py         # AWS Bedrock 클라이언트
 ├── prompts.py            # AI 모델 프롬프트 중앙 관리
 ├── utils.py              # 유틸리티 함수
-├── config.py             # 환경 설정
+├── config.py             # 환경 설정 (Model ID 설정, 리전 설정 등)
 ├── requirements.txt      # 필요 라이브러리
 └── README.md             # 프로젝트 설명서
 ```
